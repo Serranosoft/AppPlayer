@@ -16,21 +16,26 @@ export default function Home() {
                 tabBarOptions={{
                     pressColor: 'transparent',
                     pressOpacity: 1,
+                    activeTintColor: "black",
+                    inactiveTintColor: "lightgray",  
                     labelStyle: {
                         fontSize: 16,
                         textTransform: 'none',
                     },
                     style: {
-                        backgroundColor: "#252A5D",
-                        height: 50,
-                        elevation: 0,
+                        justifyContent: "center",
+                        backgroundColor: "white",
+                        height: 75,
+                        elevation: 50,
                         marginTop: StatusBar.currentHeight,
+                        width: "100%",
                     },
                     indicatorStyle: {
-                        backgroundColor: 'red',
-                        height: 4,
+                        backgroundColor: 'black',
+                        height: 5,
+                        borderRadius: 100,
                     },
-                    tabStyle: { width: 'auto', marginLeft: 10, alignItems: 'center' },
+                    tabStyle: { /* width: 'auto', *//*  marginLeft: 10, */ alignItems: 'center',  },
                 }}>
                 <Tab.Screen
                     name="Nanas"
@@ -38,7 +43,7 @@ export default function Home() {
                 /* options={{ headerShown: false }} */
                 />
                 <Tab.Screen
-                    name="Sounds"
+                    name="Sonidos"
                     component={Sounds}
                 /* options={{ headerShown: false }} */
                 />

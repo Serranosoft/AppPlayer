@@ -10,26 +10,25 @@ export default function Nanas({ navigation }) {
         <View style={{
             flex: 1,
             alignItems: "center",
-            backgroundColor: "#252A5D",
-            paddingVertical: 60,
+            backgroundColor: "#2b66b3",
             paddingHorizontal: 20,
+            paddingBottom: 20,
         }}>
             <ScrollView style={{
                 flex: 1,   
+                paddingTop: 20,
             }}>
-
-                <View style={{alignItems: "center", justifyContent: "center", backgroundColor: "white"}}>
-                    <Text>Relajante</Text>
+                <View style={{marginVertical: 20}}>
+                    <Text style={{marginLeft: 12, marginBottom: 20, fontSize: 33, color: "#95E3EB"}}>Relajante</Text>
 
                     <View style={{
                         flexDirection: "row",
                         flexWrap: "wrap",
-                        marginHorizontal: 8
                     }}>
                         {
                             tmp_arr.map(el => {
                                 return (
-                                    <View style={{ width: "20%", height: 70, backgroundColor: el, margin: 12 }}></View>
+                                    <View style={{ width: 70, height: 70, backgroundColor: el, margin: 12 }}></View>
                                 )
                             })
                         }
@@ -48,7 +47,7 @@ export default function Nanas({ navigation }) {
                         {
                             tmp_arr.map(el => {
                                 return (
-                                    <View style={{ width: "20%", height: 70, backgroundColor: el, margin: 8 }}></View>
+                                    <View style={{ width: "20%", height: 70, backgroundColor: el, margin: 12 }}></View>
                                 )
                             })
                         }

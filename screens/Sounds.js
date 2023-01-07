@@ -8,10 +8,6 @@ export default function Sounds({ navigation }) {
         "red", "white", "yellow", "green", "cyan", "white", "gray", "lightgray", "black", "pink"
     ]
 
-    // Escogido por el usuario
-    const [song, setChosedSong] = useState("");
-    const [icon, setChosedIcon] = useState("");
-
     // Subcategorias.
     const [nature, setNature] = useState([]);
     
@@ -28,21 +24,20 @@ export default function Sounds({ navigation }) {
             }
         })
 
-        setNature(icons);
+        setter(icons);
     }
 
-    async function setSongByPath(folder, icon, songName) {
-        const { data, error } = supabase.storage.from('test').getPublicUrl(`${folder}/sounds/${songName.replace("jpg", "mp3")}`);
-        
-        setChosedIcon(icon)
-        setChosedSong(data);
-    }
+    async function getSongIndexFromFolder(folder, songName, icon) {
 
-    useEffect(() => {
-        if (song !== "" && icon !== "") {
-            navigation.navigate("Player", { song: song.publicUrl, icon: icon })
-        }
-    }, [song, icon])
+        const { data, error } = await supabase.storage.from("test").list(`${folder}/sounds`, { limit: 100 });
+
+        data.forEach((song, songIndex) => {
+            if (song.name == songName) {
+                navigation.navigate("Player", { songIndex, folder })
+            }
+        })
+
+    }
 
     useEffect(() => {
         getIconsByFolder("naturaleza", setNature);
@@ -65,10 +60,10 @@ export default function Sounds({ navigation }) {
                         flexWrap: "wrap"
                     }}>
                         {
-                            nature.map(icon => {
+                            nature.map((icon, i) => {
                                 return (
                                     <TouchableOpacity onPress={() => {
-                                        setSongByPath("naturaleza", icon, icon.substring(icon.lastIndexOf('/') + 1))
+                                        getSongIndexFromFolder("naturaleza", icon.substring(icon.lastIndexOf('/') + 1).replace("jpg", "mp3"), icon);
                                     }}>
                                         <Image style={{width: 70, height: 70, margin: 12}} source={{uri: icon}} />
                                     </TouchableOpacity>
