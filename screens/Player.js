@@ -1,7 +1,8 @@
 import { ImageBackground, View, Text, TouchableOpacity, Button, BackHandler, Image, Platform } from "react-native";
 import { Audio } from 'expo-av';
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { supabase } from "../src/supabaseClient"
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function Player({ navigation, route }) {
 
@@ -26,6 +27,23 @@ export default function Player({ navigation, route }) {
     // Ilustración a renderizar en pantalla.
     const [icon, setIcon] = useState(null);
 
+    useEffect(() => {
+        getSong();
+    }, [])
+
+    useFocusEffect(
+        useCallback(() => {
+            const onBackPress = () => {
+                // navigation.pop(2); // remove two screens i.e. Document and Camera
+                navigation.push("Home")
+                return true // disable normal behaviour
+            };
+            BackHandler.addEventListener('hardwareBackPress', (onBackPress)); // detect back button press
+            return () =>
+                BackHandler.removeEventListener('hardwareBackPress');
+        }, [])
+    );
+
     const getSong = async () => {
         await supabase.storage.from("test").list(`${folder}/sounds/`, { limit: 100 }).then((res) => {
             setFolderLength(res.data.length);
@@ -45,10 +63,6 @@ export default function Player({ navigation, route }) {
         const { data, error } = supabase.storage.from("test").getPublicUrl(`${folder}/icons/${songName.replace("mp3", "jpg")}`)
         setIcon(data.publicUrl);
     }
-
-    useEffect(() => {
-        getSong();
-    }, [])
 
     const loadAudio = async () => {
         const checkLoaded = await sound.current.getStatusAsync();
@@ -139,7 +153,6 @@ export default function Player({ navigation, route }) {
             setTimer(0);
             sound.current.stopAsync();
             sound.current.unloadAsync();
-            navigation.push("Sounds");
         })
     }
 
