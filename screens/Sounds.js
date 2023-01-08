@@ -7,6 +7,8 @@ export default function Sounds({ navigation }) {
     // Subcategorias.
     const [nature, setNature] = useState([]);
     const [cotidiano, setCotidiano] = useState([]);
+    const [electrodomesticos, setElectrodomesticos] = useState([]);
+    const [ruidoBlanco, setRuidoBlanco] = useState([]);
 
 
     async function getIconsByFolder(folder, setter) {
@@ -39,6 +41,8 @@ export default function Sounds({ navigation }) {
     useEffect(() => {
         getIconsByFolder("naturaleza", setNature);
         getIconsByFolder("cotidiano", setCotidiano);
+        getIconsByFolder("electrodomesticos", setElectrodomesticos);
+        getIconsByFolder("ruido-blanco", setRuidoBlanco);
     }, [])
 
     return (
@@ -110,10 +114,32 @@ export default function Sounds({ navigation }) {
                             flexWrap: "wrap"
                         }}>
                             {
-                                cotidiano.map((icon, i) => {
+                                electrodomesticos.map((icon, i) => {
                                     return (
                                         <TouchableOpacity key={i} onPress={() => {
-                                            getSongIndexFromFolder("cotidiano", icon.substring(icon.lastIndexOf('/') + 1).replace("jpg", "mp3"), icon);
+                                            getSongIndexFromFolder("electrodomesticos", icon.substring(icon.lastIndexOf('/') + 1).replace("jpg", "mp3"), icon);
+                                        }}>
+                                            <Image style={{ width: 70, height: 70, margin: 12, borderRadius: 25 }} source={{ uri: icon }} />
+                                        </TouchableOpacity>
+                                    )
+                                })
+                            }
+                        </View>
+
+                    </View>
+
+                    <View style={{ marginVertical: 20 }}>
+                        <Text style={{ marginLeft: 12, marginBottom: 20, fontSize: 30, color: "#95E3EB", fontFamily: "heading" }}>Ruido blanco</Text>
+                        
+                        <View style={{
+                            flexDirection: "row",
+                            flexWrap: "wrap"
+                        }}>
+                            {
+                                ruidoBlanco.map((icon, i) => {
+                                    return (
+                                        <TouchableOpacity key={i} onPress={() => {
+                                            getSongIndexFromFolder("ruido-blanco", icon.substring(icon.lastIndexOf('/') + 1).replace("jpg", "mp3"), icon);
                                         }}>
                                             <Image style={{ width: 70, height: 70, margin: 12, borderRadius: 25 }} source={{ uri: icon }} />
                                         </TouchableOpacity>
