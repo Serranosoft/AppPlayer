@@ -35,7 +35,8 @@ export default function Player({ navigation, route }) {
         useCallback(() => {
             const onBackPress = () => {
                 // navigation.pop(2); // remove two screens i.e. Document and Camera
-                navigation.push("Home")
+                navigation.navigate("Home");
+                resetAll();
                 return true // disable normal behaviour
             };
             BackHandler.addEventListener('hardwareBackPress', (onBackPress)); // detect back button press
@@ -43,6 +44,16 @@ export default function Player({ navigation, route }) {
                 BackHandler.removeEventListener('hardwareBackPress');
         }, [])
     );
+
+    const resetAll = () => {
+        window.clearInterval(intervalWidth);
+        setSoundDetails(null);
+        setIsPlaying(false);
+        setLoadingWidth(0);
+        setTimer(0);
+        sound.current.stopAsync();
+        sound.current.unloadAsync();
+    }
 
     const getSong = async () => {
         await supabase.storage.from("test").list(`${folder}/sounds/`, { limit: 100 }).then((res) => {
@@ -143,17 +154,6 @@ export default function Player({ navigation, route }) {
                 setTimer(0);
             }
         }, 1000)
-
-        BackHandler.addEventListener('hardwareBackPress', function aaa() {
-            window.clearInterval(intervalWidth);
-            BackHandler.removeEventListener("hardwareBackPress", aaa);
-            setSoundDetails(null);
-            setIsPlaying(false);
-            setLoadingWidth(0);
-            setTimer(0);
-            sound.current.stopAsync();
-            sound.current.unloadAsync();
-        })
     }
 
     return (
@@ -175,8 +175,8 @@ export default function Player({ navigation, route }) {
                             } else {
                                 nextSongIndex.current -= 1;
                             }
-
                             navigation.push("Player", { songIndex: nextSongIndex.current, folder, icon })
+                            resetAll();
                         }}>
                             <Image style={{
                                 width: "100%",
@@ -199,8 +199,8 @@ export default function Player({ navigation, route }) {
                             } else {
                                 nextSongIndex.current += 1;
                             }
-
                             navigation.push("Player", { songIndex: nextSongIndex.current, folder, icon })
+                            resetAll();
                         }}>
                             <Image style={{
                                 width: "100%",

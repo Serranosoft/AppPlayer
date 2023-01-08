@@ -16,26 +16,25 @@ export default function Home() {
                 tabBarOptions={{
                     pressColor: 'transparent',
                     pressOpacity: 1,
-                    activeTintColor: "black",
-                    inactiveTintColor: "lightgray",  
+                    activeTintColor: "#95E3EB",
+                    inactiveTintColor: "#95E3EB",  
                     labelStyle: {
-                        fontSize: 16,
+                        fontSize: 26,
                         textTransform: 'none',
                     },
                     style: {
                         justifyContent: "center",
-                        backgroundColor: "white",
+                        backgroundColor: "#2b66b3",
                         height: 75,
-                        elevation: 50,
                         marginTop: StatusBar.currentHeight,
                         width: "100%",
                     },
                     indicatorStyle: {
-                        backgroundColor: 'black',
+                        backgroundColor: '#95E3EB',
                         height: 5,
                         borderRadius: 100,
                     },
-                    tabStyle: { /* width: 'auto', *//*  marginLeft: 10, */ alignItems: 'center',  },
+                    tabStyle: { alignItems: 'center' },
                 }}>
                 <Tab.Screen
                     name="Nanas"
