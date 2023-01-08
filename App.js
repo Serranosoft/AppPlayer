@@ -6,7 +6,7 @@ import { useFonts } from 'expo-font';
 import { useCallback, useEffect, useState } from 'react';
 import Player from './screens/Player';
 import * as SplashScreen from 'expo-splash-screen';
-import { View } from 'react-native';
+import { Text, View } from 'react-native';
 import * as Font from 'expo-font';
 
 SplashScreen.preventAutoHideAsync();
@@ -31,8 +31,9 @@ export default function App() {
     }
 
     return (
-        <View onLayout={onLayoutRootView}>
-            {/* <NavigationContainer>
+        <View style={{flex: 1}} onLayout={onLayoutRootView}>
+            <NavigationContainer>
+                <Text></Text>
                 <Stack.Navigator initialRouteName='Home'>
                     <Stack.Screen
                         name="Home"
@@ -45,7 +46,7 @@ export default function App() {
                         options={{ headerShown: false }}
                     />
                 </Stack.Navigator>
-            </NavigationContainer> */}
+            </NavigationContainer>
         </View>
 
     );

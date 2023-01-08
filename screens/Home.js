@@ -16,7 +16,7 @@ export default function Home() {
                 "tabBarPressOpacity": 1,
                 "tabBarLabelStyle": {
                     "fontSize": 26,
-                    // "fontFamily": "heading"
+                    "fontFamily": "heading"
                 },
                 "tabBarItemStyle": {
                     "alignItems": "center",
@@ -30,7 +30,7 @@ export default function Home() {
                     "justifyContent": "center",
                     "backgroundColor": "#2b66b3",
                     "height": 75,
-                    "marginTop": 24,
+                    // "marginTop": 24,
                     "width": "100%"
                 }
             }}>
