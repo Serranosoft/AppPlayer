@@ -1,4 +1,4 @@
-import { ImageBackground, View, Text, TouchableOpacity, Button, BackHandler, Image, Platform } from "react-native";
+import { ImageBackground, View, TouchableOpacity, BackHandler, Image } from "react-native";
 import { Audio } from 'expo-av';
 import { useCallback, useEffect, useRef, useState } from "react";
 import { supabase } from "../src/supabaseClient"

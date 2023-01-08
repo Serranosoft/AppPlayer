@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Image, ScrollView, StatusBar, Text, TouchableOpacity, View } from "react-native"
+import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native"
 import { supabase } from "../src/supabaseClient"
 
 export default function Sounds({ navigation }) {
@@ -62,7 +62,7 @@ export default function Sounds({ navigation }) {
                         {
                             nature.map((icon, i) => {
                                 return (
-                                    <TouchableOpacity onPress={() => {
+                                    <TouchableOpacity key={i} onPress={() => {
                                         getSongIndexFromFolder("naturaleza", icon.substring(icon.lastIndexOf('/') + 1).replace("jpg", "mp3"), icon);
                                     }}>
                                         <Image style={{width: 70, height: 70, margin: 12}} source={{uri: icon}} />

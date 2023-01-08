@@ -68,7 +68,7 @@ export default function Nanas({ navigation }) {
                             {
                                 nanas.map((icon, i)=> {
                                     return (
-                                        <TouchableOpacity onPress={() => {
+                                        <TouchableOpacity key={i} onPress={() => {
                                             getSongIndexFromFolder("nanas", icon.substring(icon.lastIndexOf('/') + 1).replace("jpg", "mp3"), icon);
                                         }}>
                                             <Image style={{ width: 70, height: 70, margin: 12, borderRadius: 25 }} source={{ uri: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Red_flag.svg/2560px-Red_flag.svg.png" }} />
