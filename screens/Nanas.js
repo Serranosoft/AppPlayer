@@ -4,13 +4,8 @@ import { supabase } from "../src/supabaseClient";
 
 export default function Nanas({ navigation }) {
 
-    let tmp_arr = [
-        "red", "white", "yellow", "green", "cyan", "white", "gray", "lightgray", "black", "pink"
-    ]
-
     // Subcategorias.
     const [nanas, setNanas] = useState([]);
-
 
     async function getIconsByFolder(folder, setter) {
         let icons = [];
@@ -51,7 +46,7 @@ export default function Nanas({ navigation }) {
             <View style={{
                 flex: 1,
                 alignItems: "center",
-                paddingHorizontal: 20,
+                paddingHorizontal: 10,
                 paddingBottom: 20,
             }}>
                 <ScrollView style={{
@@ -59,7 +54,7 @@ export default function Nanas({ navigation }) {
                     paddingTop: 20,
                 }}>
                     <View style={{ marginVertical: 20 }}>
-                        <Text style={{ marginLeft: 12, marginBottom: 20, fontSize: 33, color: "#95E3EB" }}>Nanas</Text>
+                        <Text style={{ marginLeft: 12, marginBottom: 20, fontSize: 30, color: "#95E3EB", fontFamily: "heading" }}>Nanas</Text>
 
                         <View style={{
                             flexDirection: "row",
