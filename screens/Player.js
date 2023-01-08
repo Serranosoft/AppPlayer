@@ -22,6 +22,8 @@ export default function Player({ navigation, route }) {
     const [loadingWidth, setLoadingWidth] = useState(0);
     // Auxiliar para saber si la canción se está reproduciendo
     const [isPlaying, setIsPlaying] = useState(true);
+    // Auxiliar para saber si la canción está muteada
+    const [isMuted, setIsMuted] = useState(false);
     // Timer para actualizar cuanto lleva reproduciéndose
     const [timer, setTimer] = useState(0);
     // Ilustración a renderizar en pantalla.
@@ -87,6 +89,16 @@ export default function Player({ navigation, route }) {
             await sound.current.loadAsync({ uri: songTrack.current }, {}, true).then(() => {
                 getAudioDetails();
             });
+        }
+    }
+
+    const muteAudio = () => {
+        if (isMuted) {
+            sound.current.setIsMutedAsync(false);
+            setIsMuted(false)
+        } else {
+            sound.current.setIsMutedAsync(true);
+            setIsMuted(true)
         }
     }
 
@@ -166,15 +178,25 @@ export default function Player({ navigation, route }) {
             <ImageBackground style={{ flex: 1, justifyContent: "flex-end" }} source={{ uri: icon }}>
 
 
-                <View style={{ backgroundColor: "rgba(56,56,56,0.75)", paddingHorizontal: 40, paddingTop: 40, paddingBottom: 20, justifyContent: "center", alignItems: "center", borderTopRightRadius: 50, borderTopLeftRadius: 50 }}>
+                <View style={{ backgroundColor: "rgba(17,66,130,0.75)", paddingHorizontal: 30, paddingTop: 40, paddingBottom: 20, justifyContent: "center", alignItems: "center", borderTopRightRadius: 50, borderTopLeftRadius: 50 }}>
 
-                    <View style={{ width: "100%", height: 15, backgroundColor: "gray", marginBottom: 20, borderRadius: 15 }}>
-                        <View style={{ width: `${loadingWidth}%`, backgroundColor: "white", height: 15, borderRadius: 15 }}></View>
+                    <View style={{ width: "100%", height: 15, backgroundColor: "#858585", marginBottom: 20, borderRadius: 15 }}>
+                        <View style={{ width: `${loadingWidth}%`, backgroundColor: "#e3f6f9", height: 15, borderRadius: 15 }}></View>
                     </View>
 
-                    <View style={{ width: "100%", paddingHorizontal: 0, flexDirection: "row", alignItems: "center", position: "relative", justifyContent: "space-around" }}>
+                    <View style={{ width: "100%", paddingVertical: 0, flexDirection: "row", alignItems: "center", position: "relative", justifyContent: "space-around" }}>
 
-                        <TouchableOpacity style={{ width: 50, height: 50 }} onPress={() => {
+                        <TouchableOpacity style={{ width: 35, height: 35 }} onPress={() => {
+                            muteAudio();
+                        }}>
+                            <Image style={{
+                                width: "100%",
+                                height: "100%",
+                            }}
+                                source={require("../assets/loop.png")} />
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={{ width: 35, height: 35 }} onPress={() => {
                             if (songIndex === 0) {
                                 nextSongIndex.current = folderLength - 1;
                             } else {
@@ -189,7 +211,7 @@ export default function Player({ navigation, route }) {
                             }}
                                 source={require("../assets/prev.png")} />
                         </TouchableOpacity>
-                        <TouchableOpacity style={{ width: 50, height: 50 }} onPress={() => {
+                        <TouchableOpacity style={{ width: 35, height: 35 }} onPress={() => {
                             handleAudio();
                         }}>
                             {isPlaying ?
@@ -198,7 +220,7 @@ export default function Player({ navigation, route }) {
                                 <Image style={{ width: "100%", height: "100%" }} source={require("../assets/play.png")} />
                             }
                         </TouchableOpacity>
-                        <TouchableOpacity style={{ width: 50, height: 50 }} onPress={() => {
+                        <TouchableOpacity style={{ width: 35, height: 35 }} onPress={() => {
                             if (songIndex === folderLength - 1) {
                                 nextSongIndex.current = 0;
                             } else {
@@ -214,18 +236,19 @@ export default function Player({ navigation, route }) {
                                 source={require("../assets/next.png")} />
                         </TouchableOpacity>
 
+                        <TouchableOpacity style={{ width: 35, height: 35 }} onPress={() => {
+                            LoopAudio();
+                            // muteAudio();
+                        }}>
+                            <Image style={{
+                                width: "100%",
+                                height: "100%",
+                            }}
+                                source={require("../assets/loop.png")} />
+                        </TouchableOpacity>
 
                     </View>
 
-                    {/* <TouchableOpacity style={{ width: 35, height: 35, marginTop: 20 }} onPress={() => {
-                        LoopAudio();
-                    }}>
-                        <Image style={{
-                            width: "100%",
-                            height: "100%",
-                        }}
-                            source={require("../assets/loop.png")} />
-                    </TouchableOpacity> */}
 
                 </View>
 
