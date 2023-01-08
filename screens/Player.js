@@ -89,6 +89,7 @@ export default function Player({ navigation, route }) {
         const checkLoaded = await sound.current.getStatusAsync();
         if (checkLoaded.isLoaded === false) {
             await sound.current.loadAsync({ uri: songTrack.current }, {}, true).then(() => {
+                console.log("Song loaded. Get audio details.");
                 getAudioDetails();
             });
         }
@@ -175,6 +176,10 @@ export default function Player({ navigation, route }) {
         }, 1000)
     }
 
+    /*
+    
+        BUG: Debo ocultar botones hasta que la canción actual se cargue
+    */
     return (
         <>
             <ImageBackground style={{ flex: 1, justifyContent: "flex-end" }} source={{ uri: icon }}>
@@ -186,73 +191,76 @@ export default function Player({ navigation, route }) {
                         <View style={{ width: `${loadingWidth}%`, backgroundColor: "#e3f6f9", height: 15, borderRadius: 15 }}></View>
                     </View>
 
-                    <View style={{ width: "100%", paddingVertical: 0, flexDirection: "row", alignItems: "center", position: "relative", justifyContent: "space-around" }}>
+                    { soundDetails !== null && 
+                    
+                        <View style={{ width: "100%", paddingVertical: 0, flexDirection: "row", alignItems: "center", position: "relative", justifyContent: "space-around" }}>
 
-                        <TouchableOpacity onPress={() => {
-                            muteAudio();
-                        }}>
-                            <Image style={{
-                                width: 45,
-                                height: 45,
-                                resizeMode: "contain"
-                            }}
-                                source={isMuted ? require("../assets/mute-on.png") : require("../assets/mute-off.png")} />
-                        </TouchableOpacity>
+                            <TouchableOpacity onPress={() => {
+                                muteAudio();
+                            }}>
+                                <Image style={{
+                                    width: 45,
+                                    height: 45,
+                                    resizeMode: "contain"
+                                }}
+                                    source={isMuted ? require("../assets/mute-on.png") : require("../assets/mute-off.png")} />
+                            </TouchableOpacity>
 
-                        <TouchableOpacity onPress={() => {
-                            if (songIndex === 0) {
-                                nextSongIndex.current = folderLength - 1;
-                            } else {
-                                nextSongIndex.current -= 1;
-                            }
-                            navigation.push("Player", { songIndex: nextSongIndex.current, folder, icon })
-                            resetAll();
-                        }}>
-                            <Image style={{
-                                width: 45,
-                                height: 45,
-                                resizeMode: "contain"
-                            }}
-                                source={require("../assets/prev.png")} />
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => {
-                            handleAudio();
-                        }}>
-                            {isPlaying ?
-                                <Image style={{ width: 45, height: 45 }} source={require("../assets/pause.png")} />
-                                :
-                                <Image style={{ width: 45, height: 45 }} source={require("../assets/play.png")} />
-                            }
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => {
-                            if (songIndex === folderLength - 1) {
-                                nextSongIndex.current = 0;
-                            } else {
-                                nextSongIndex.current += 1;
-                            }
-                            navigation.push("Player", { songIndex: nextSongIndex.current, folder, icon })
-                            resetAll();
-                        }}>
-                            <Image style={{
-                                width: 45,
-                                height: 45,
-                                resizeMode: "contain"
-                            }}
-                                source={require("../assets/next.png")} />
-                        </TouchableOpacity>
+                            <TouchableOpacity onPress={() => {
+                                if (songIndex === 0) {
+                                    nextSongIndex.current = folderLength - 1;
+                                } else {
+                                    nextSongIndex.current -= 1;
+                                }
+                                navigation.push("Player", { songIndex: nextSongIndex.current, folder, icon })
+                                resetAll();
+                            }}>
+                                <Image style={{
+                                    width: 45,
+                                    height: 45,
+                                    resizeMode: "contain"
+                                }}
+                                    source={require("../assets/prev.png")} />
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => {
+                                handleAudio();
+                            }}>
+                                {isPlaying ?
+                                    <Image style={{ width: 45, height: 45 }} source={require("../assets/pause.png")} />
+                                    :
+                                    <Image style={{ width: 45, height: 45 }} source={require("../assets/play.png")} />
+                                }
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => {
+                                if (songIndex === folderLength - 1) {
+                                    nextSongIndex.current = 0;
+                                } else {
+                                    nextSongIndex.current += 1;
+                                }
+                                navigation.push("Player", { songIndex: nextSongIndex.current, folder, icon })
+                                resetAll();
+                            }}>
+                                <Image style={{
+                                    width: 45,
+                                    height: 45,
+                                    resizeMode: "contain"
+                                }}
+                                    source={require("../assets/next.png")} />
+                            </TouchableOpacity>
 
-                        <TouchableOpacity onPress={() => {
-                            LoopAudio();
-                        }}>
-                            <Image style={{
-                                width: 45,
-                                height: 45,
-                                resizeMode: "contain"
-                            }}
-                                source={isLoop ? require("../assets/loop-on.png") : require("../assets/loop-off.png")} />
-                        </TouchableOpacity>
+                            <TouchableOpacity onPress={() => {
+                                LoopAudio();
+                            }}>
+                                <Image style={{
+                                    width: 45,
+                                    height: 45,
+                                    resizeMode: "contain"
+                                }}
+                                    source={isLoop ? require("../assets/loop-on.png") : require("../assets/loop-off.png")} />
+                            </TouchableOpacity>
 
-                    </View>
+                        </View>
+                    }
 
 
                 </View>
