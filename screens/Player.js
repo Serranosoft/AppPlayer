@@ -10,7 +10,7 @@ export default function Player({ navigation, route }) {
 
     const sound = useRef(new Audio.Sound());
     const intervalWidth = useRef(null)
-    const isLoop = useRef(false);
+    // const isLoop = useRef(false);
     const songTrack = useRef(null);
     const nextSongIndex = useRef(songIndex);
 
@@ -24,6 +24,8 @@ export default function Player({ navigation, route }) {
     const [isPlaying, setIsPlaying] = useState(true);
     // Auxiliar para saber si la canción está muteada
     const [isMuted, setIsMuted] = useState(false);
+    // Auxiliar para saber si la canción está en loop
+    const [isLoop, setIsLoop] = useState(false);
     // Timer para actualizar cuanto lleva reproduciéndose
     const [timer, setTimer] = useState(0);
     // Ilustración a renderizar en pantalla.
@@ -56,7 +58,7 @@ export default function Player({ navigation, route }) {
         window.clearInterval(intervalWidth);
         sound.current.stopAsync();
         sound.current.unloadAsync();
-        isLoop.current = false;
+        setIsLoop(false);
         setSoundDetails(null);
         setIsPlaying(true);
         setLoadingWidth(0);
@@ -121,7 +123,7 @@ export default function Player({ navigation, route }) {
     const PlayAudio = async () => {
         if (soundDetails.isLoaded) {
             if (soundDetails.isPlaying === false) {
-                if (isLoop.current == true) {
+                if (isLoop) {
                     sound.current.playAsync();
                 } else {
                     sound.current.playFromPositionAsync(timer * 1000);
@@ -142,11 +144,11 @@ export default function Player({ navigation, route }) {
 
     const LoopAudio = async () => {
         if (soundDetails.isLoaded) {
-            if (isLoop.current == true) {
+            if (isLoop) {
                 sound.current.setIsLoopingAsync(false);
-                isLoop.current = false;
+                setIsLoop(false);
             } else {
-                isLoop.current = true;
+                setIsLoop(true);
                 sound.current.setIsLoopingAsync(true);
             }
         }
@@ -161,7 +163,7 @@ export default function Player({ navigation, route }) {
 
             setLoadingWidth(Math.floor((timerAux * 100) / duration));
             if (timerAux === duration) {
-                if (isLoop.current == false) {
+                if (!isLoop) {
                     window.clearInterval(intervalWidth.current);
                     setIsPlaying(false);
                 } else {
@@ -186,17 +188,18 @@ export default function Player({ navigation, route }) {
 
                     <View style={{ width: "100%", paddingVertical: 0, flexDirection: "row", alignItems: "center", position: "relative", justifyContent: "space-around" }}>
 
-                        <TouchableOpacity style={{ width: 35, height: 35 }} onPress={() => {
+                        <TouchableOpacity onPress={() => {
                             muteAudio();
                         }}>
                             <Image style={{
-                                width: "100%",
-                                height: "100%",
+                                width: 45,
+                                height: 45,
+                                resizeMode: "contain"
                             }}
-                                source={require("../assets/loop.png")} />
+                                source={isMuted ? require("../assets/mute-on.png") : require("../assets/mute-off.png")} />
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={{ width: 35, height: 35 }} onPress={() => {
+                        <TouchableOpacity onPress={() => {
                             if (songIndex === 0) {
                                 nextSongIndex.current = folderLength - 1;
                             } else {
@@ -206,21 +209,22 @@ export default function Player({ navigation, route }) {
                             resetAll();
                         }}>
                             <Image style={{
-                                width: "100%",
-                                height: "100%",
+                                width: 45,
+                                height: 45,
+                                resizeMode: "contain"
                             }}
                                 source={require("../assets/prev.png")} />
                         </TouchableOpacity>
-                        <TouchableOpacity style={{ width: 35, height: 35 }} onPress={() => {
+                        <TouchableOpacity onPress={() => {
                             handleAudio();
                         }}>
                             {isPlaying ?
-                                <Image style={{ width: "100%", height: "100%" }} source={require("../assets/pause.png")} />
+                                <Image style={{ width: 45, height: 45 }} source={require("../assets/pause.png")} />
                                 :
-                                <Image style={{ width: "100%", height: "100%" }} source={require("../assets/play.png")} />
+                                <Image style={{ width: 45, height: 45 }} source={require("../assets/play.png")} />
                             }
                         </TouchableOpacity>
-                        <TouchableOpacity style={{ width: 35, height: 35 }} onPress={() => {
+                        <TouchableOpacity onPress={() => {
                             if (songIndex === folderLength - 1) {
                                 nextSongIndex.current = 0;
                             } else {
@@ -230,21 +234,22 @@ export default function Player({ navigation, route }) {
                             resetAll();
                         }}>
                             <Image style={{
-                                width: "100%",
-                                height: "100%",
+                                width: 45,
+                                height: 45,
+                                resizeMode: "contain"
                             }}
                                 source={require("../assets/next.png")} />
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={{ width: 35, height: 35 }} onPress={() => {
+                        <TouchableOpacity onPress={() => {
                             LoopAudio();
-                            // muteAudio();
                         }}>
                             <Image style={{
-                                width: "100%",
-                                height: "100%",
+                                width: 45,
+                                height: 45,
+                                resizeMode: "contain"
                             }}
-                                source={require("../assets/loop.png")} />
+                                source={isLoop ? require("../assets/loop-on.png") : require("../assets/loop-off.png")} />
                         </TouchableOpacity>
 
                     </View>
