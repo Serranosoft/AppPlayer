@@ -34,12 +34,11 @@ export default function Player({ navigation, route }) {
     useFocusEffect(
         useCallback(() => {
             const onBackPress = () => {
-                // navigation.pop(2); // remove two screens i.e. Document and Camera
                 navigation.navigate("Home");
                 resetAll();
-                return true // disable normal behaviour
+                return true;
             };
-            BackHandler.addEventListener('hardwareBackPress', (onBackPress)); // detect back button press
+            BackHandler.addEventListener('hardwareBackPress', (onBackPress));
             return () =>
                 BackHandler.removeEventListener('hardwareBackPress');
         }, [])
@@ -47,12 +46,13 @@ export default function Player({ navigation, route }) {
 
     const resetAll = () => {
         window.clearInterval(intervalWidth);
+        sound.current.stopAsync();
+        sound.current.unloadAsync();
+        isLoop.current = false;
         setSoundDetails(null);
         setIsPlaying(false);
         setLoadingWidth(0);
         setTimer(0);
-        sound.current.stopAsync();
-        sound.current.unloadAsync();
     }
 
     const getSong = async () => {
@@ -101,17 +101,20 @@ export default function Player({ navigation, route }) {
     }
 
     const PlayAudio = async () => {
-        if (soundDetails.isLoaded) {
-            if (soundDetails.isPlaying === false) {
-                if (isLoop.current == true) {
-                    sound.current.playAsync();
-                } else {
-                    sound.current.playFromPositionAsync(timer * 1000);
+        if (soundDetails) {
+            if (soundDetails.isLoaded) {
+                if (soundDetails.isPlaying === false) {
+                    if (isLoop.current == true) {
+                        sound.current.playAsync();
+                    } else {
+                        sound.current.playFromPositionAsync(timer * 1000);
+                    }
+                    setIsPlaying(true);
+                    LoadAudioBar();
                 }
-
-                setIsPlaying(true);
-                LoadAudioBar();
             }
+        } else {
+            getAudioDetails();
         }
     };
 
