@@ -1,4 +1,4 @@
-import { ImageBackground, View, TouchableOpacity, BackHandler, Image } from "react-native";
+import { ImageBackground, View, TouchableOpacity, BackHandler, Image, Text } from "react-native";
 import { Audio } from 'expo-av';
 import { useCallback, useEffect, useRef, useState } from "react";
 import { supabase } from "../src/supabaseClient"
@@ -21,7 +21,7 @@ export default function Player({ navigation, route }) {
     // Carga de la barra para ir pintandola mientras se reproduce.
     const [loadingWidth, setLoadingWidth] = useState(0);
     // Auxiliar para saber si la canción se está reproduciendo
-    const [isPlaying, setIsPlaying] = useState(false);
+    const [isPlaying, setIsPlaying] = useState(true);
     // Timer para actualizar cuanto lleva reproduciéndose
     const [timer, setTimer] = useState(0);
     // Ilustración a renderizar en pantalla.
@@ -30,6 +30,12 @@ export default function Player({ navigation, route }) {
     useEffect(() => {
         getSong();
     }, [])
+
+    useEffect(() => {
+        if (soundDetails != null) {
+            PlayAudio();
+        }
+    }, [soundDetails])
 
     useFocusEffect(
         useCallback(() => {
@@ -50,7 +56,7 @@ export default function Player({ navigation, route }) {
         sound.current.unloadAsync();
         isLoop.current = false;
         setSoundDetails(null);
-        setIsPlaying(false);
+        setIsPlaying(true);
         setLoadingWidth(0);
         setTimer(0);
     }
@@ -101,20 +107,16 @@ export default function Player({ navigation, route }) {
     }
 
     const PlayAudio = async () => {
-        if (soundDetails) {
-            if (soundDetails.isLoaded) {
-                if (soundDetails.isPlaying === false) {
-                    if (isLoop.current == true) {
-                        sound.current.playAsync();
-                    } else {
-                        sound.current.playFromPositionAsync(timer * 1000);
-                    }
-                    setIsPlaying(true);
-                    LoadAudioBar();
+        if (soundDetails.isLoaded) {
+            if (soundDetails.isPlaying === false) {
+                if (isLoop.current == true) {
+                    sound.current.playAsync();
+                } else {
+                    sound.current.playFromPositionAsync(timer * 1000);
                 }
+                setIsPlaying(true);
+                LoadAudioBar();
             }
-        } else {
-            getAudioDetails();
         }
     };
 
