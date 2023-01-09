@@ -22,15 +22,11 @@ export default function Nanas({ navigation }) {
         setter(icons);
     }
 
-    async function getSongIndexFromFolder(folder, songName, icon) {
+    async function getSongIndexFromFolder(folder, songName, arr) {
 
-        const { data, error } = await supabase.storage.from("test").list(`${folder}/sounds`, { limit: 100 });
-        data.forEach((song, songIndex) => {
-            if (song.name == songName) {
-                navigation.navigate("Player", { songIndex, folder })
-            }
-        })
+        let songIndex = arr.indexOf(songName.replace("mp3", "jpg"));
 
+        navigation.navigate("Player", { songIndex, folder })
     }
 
     useEffect(() => {
@@ -64,7 +60,7 @@ export default function Nanas({ navigation }) {
                                 nanas.map((icon, i)=> {
                                     return (
                                         <TouchableOpacity key={i} onPress={() => {
-                                            getSongIndexFromFolder("nanas", icon.substring(icon.lastIndexOf('/') + 1).replace("jpg", "mp3"), icon);
+                                            getSongIndexFromFolder("nanas", icon, nanas);
                                         }}>
                                             <Image style={{ width: 70, height: 70, margin: 12, borderRadius: 25 }} source={{ uri: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Red_flag.svg/2560px-Red_flag.svg.png" }} />
                                         </TouchableOpacity>

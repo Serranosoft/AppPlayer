@@ -89,7 +89,6 @@ export default function Player({ navigation, route }) {
         const checkLoaded = await sound.current.getStatusAsync();
         if (checkLoaded.isLoaded === false) {
             await sound.current.loadAsync({ uri: songTrack.current }, {}, true).then(() => {
-                console.log("Song loaded. Get audio details.");
                 getAudioDetails();
             });
         }

@@ -26,16 +26,11 @@ export default function Sounds({ navigation }) {
         setter(icons);
     }
 
-    async function getSongIndexFromFolder(folder, songName, icon) {
+    async function getSongIndexFromFolder(folder, songName, arr) {
 
-        const { data, error } = await supabase.storage.from("test").list(`${folder}/sounds`, { limit: 100 });
+        let songIndex = arr.indexOf(songName.replace("mp3", "jpg"));
 
-        data.forEach((song, songIndex) => {
-            if (song.name == songName) {
-                navigation.navigate("Player", { songIndex, folder })
-            }
-        })
-
+        navigation.navigate("Player", { songIndex, folder })
     }
 
     useEffect(() => {
@@ -73,7 +68,7 @@ export default function Sounds({ navigation }) {
                                 nature.map((icon, i) => {
                                     return (
                                         <TouchableOpacity key={i} onPress={() => {
-                                            getSongIndexFromFolder("naturaleza", icon.substring(icon.lastIndexOf('/') + 1).replace("jpg", "mp3"), icon);
+                                            getSongIndexFromFolder("naturaleza", icon, nature);
                                         }}>
                                             <Image style={{ width: 70, height: 70, margin: 12, borderRadius: 25 }} source={{ uri: icon }} />
                                         </TouchableOpacity>
@@ -95,7 +90,7 @@ export default function Sounds({ navigation }) {
                                 cotidiano.map((icon, i) => {
                                     return (
                                         <TouchableOpacity key={i} onPress={() => {
-                                            getSongIndexFromFolder("cotidiano", icon.substring(icon.lastIndexOf('/') + 1).replace("jpg", "mp3"), icon);
+                                            getSongIndexFromFolder("cotidiano", icon, cotidiano);
                                         }}>
                                             <Image style={{ width: 70, height: 70, margin: 12, borderRadius: 25 }} source={{ uri: icon }} />
                                         </TouchableOpacity>
@@ -117,7 +112,7 @@ export default function Sounds({ navigation }) {
                                 electrodomesticos.map((icon, i) => {
                                     return (
                                         <TouchableOpacity key={i} onPress={() => {
-                                            getSongIndexFromFolder("electrodomesticos", icon.substring(icon.lastIndexOf('/') + 1).replace("jpg", "mp3"), icon);
+                                            getSongIndexFromFolder("electrodomesticos", icon, electrodomesticos);
                                         }}>
                                             <Image style={{ width: 70, height: 70, margin: 12, borderRadius: 25 }} source={{ uri: icon }} />
                                         </TouchableOpacity>
@@ -139,7 +134,7 @@ export default function Sounds({ navigation }) {
                                 ruidoBlanco.map((icon, i) => {
                                     return (
                                         <TouchableOpacity key={i} onPress={() => {
-                                            getSongIndexFromFolder("ruido-blanco", icon.substring(icon.lastIndexOf('/') + 1).replace("jpg", "mp3"), icon);
+                                            getSongIndexFromFolder("ruido-blanco", icon, ruidoBlanco);
                                         }}>
                                             <Image style={{ width: 70, height: 70, margin: 12, borderRadius: 25 }} source={{ uri: icon }} />
                                         </TouchableOpacity>
