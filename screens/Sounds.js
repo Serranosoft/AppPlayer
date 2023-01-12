@@ -27,10 +27,12 @@ export default function Sounds({ navigation }) {
     }
 
     async function getSongIndexFromFolder(folder, songName, arr) {
-
-        let songIndex = arr.indexOf(songName.replace("mp3", "jpg"));
-
-        navigation.navigate("Player", { songIndex, folder })
+        supabase.storage.from("test").list(`${folder}/sounds`, {
+            limit: 10,
+        }).then((res) => {
+            let index = res.data.map(function(song) { return song.name; }).indexOf(songName.substring(songName.lastIndexOf('/') + 1).replace("jpg", "mp3"));
+            navigation.navigate("Player", { songIndex: index, folder })
+        })
     }
 
     useEffect(() => {
