@@ -181,7 +181,7 @@ export default function Player({ navigation, route }) {
     */
     return (
         <>
-            <ImageBackground style={{ flex: 1, justifyContent: "flex-end" }} source={{ uri: icon }}>
+            <ImageBackground style={{ flex: 1, justifyContent: "flex-end" }} resizeMode="cover" source={{ uri: icon }}>
 
 
                 <View style={{ backgroundColor: "rgba(17,66,130,0.75)", paddingHorizontal: 30, paddingTop: 40, paddingBottom: 20, justifyContent: "center", alignItems: "center", borderTopRightRadius: 50, borderTopLeftRadius: 50 }}>
