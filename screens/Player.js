@@ -1,5 +1,5 @@
 import { ImageBackground, View, TouchableOpacity, BackHandler, Image, Text } from "react-native";
-import { Audio } from 'expo-av';
+import { Audio, InterruptionModeAndroid, InterruptionModeIOS } from 'expo-av';
 import { useCallback, useEffect, useRef, useState } from "react";
 import { supabase } from "../src/supabaseClient"
 import { useFocusEffect } from '@react-navigation/native';
@@ -32,7 +32,20 @@ export default function Player({ navigation, route }) {
     const [icon, setIcon] = useState(null);
 
     useEffect(() => {
-        getSong();
+        const applyMode = async () => {
+            await Audio.setAudioModeAsync({
+                allowsRecordingIOS: false,
+                staysActiveInBackground: true,
+                interruptionModeIOS: InterruptionModeIOS.DuckOthers,
+                playsInSilentModeIOS: true,
+                shouldDuckAndroid: true,
+                interruptionModeAndroid: InterruptionModeAndroid.DuckOthers,
+                playThroughEarpieceAndroid: false
+            });
+        }
+        applyMode().then(() => {
+            getSong();
+        })
     }, [])
 
     useEffect(() => {
@@ -190,8 +203,8 @@ export default function Player({ navigation, route }) {
                         <View style={{ width: `${loadingWidth}%`, backgroundColor: "#e3f6f9", height: 15, borderRadius: 15 }}></View>
                     </View>
 
-                    { soundDetails !== null && 
-                    
+                    {soundDetails !== null &&
+
                         <View style={{ width: "100%", paddingVertical: 0, flexDirection: "row", alignItems: "center", position: "relative", justifyContent: "space-around" }}>
 
                             <TouchableOpacity onPress={() => {

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Image, ImageBackground, ScrollView, StatusBar, Text, TouchableOpacity, View } from "react-native"
 import { supabase } from "../src/supabaseClient";
+import { Dimensions } from 'react-native';
 
 export default function Nanas({ navigation }) {
 
@@ -62,11 +63,13 @@ export default function Nanas({ navigation }) {
                             {
                                 nanas.map((icon, i)=> {
                                     return (
-                                        <TouchableOpacity key={i} onPress={() => {
-                                            getSongIndexFromFolder("nanas", icon, nanas);
-                                        }}>
-                                            <Image style={{ width: 70, height: 70, margin: 12, borderRadius: 25 }} source={{ uri: icon }} />
-                                        </TouchableOpacity>
+                                        <View style={{width: "30%", marginHorizontal: 6, marginBottom: 12}}>
+                                            <TouchableOpacity key={i} onPress={() => {
+                                                getSongIndexFromFolder("nanas", icon, nanas);
+                                            }}>
+                                                <Image resizeMode="contain" style={{ width: "100%", flex: 1, height: 100, borderRadius: 25 }} source={{ uri: icon }} />
+                                            </TouchableOpacity>
+                                        </View>
                                     )
                                 })
                             }
