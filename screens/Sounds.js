@@ -11,35 +11,38 @@ export default function Sounds({ navigation }) {
     const [ruidoBlanco, setRuidoBlanco] = useState([]);
 
 
-    async function getIconsByFolder(folder, setter) {
-        let icons = [];
+    async function getIconsByFolder() {
+        await supabase.storage.from("test").list("icons").then((res) => {
+            res.data.forEach((song) => {
+                const { data, error } = supabase.storage.from('test').getPublicUrl(`icons/${song.name}`);
+                let segment = data.publicUrl.substring(data.publicUrl.lastIndexOf('/') + 1)
 
-        const { data, error } = await supabase.storage.from("test").list(`${folder}/icons`, { limit: 100 });
-
-        data.forEach(icon => {
-            if (data !== null && data.length > 0 && icon.name !== ".emptyFolderPlaceholder") {
-                const { data, error } = supabase.storage.from('test').getPublicUrl(`${folder}/icons/${icon.name}`);
-                icons.push(data.publicUrl);
-            }
-        })
-
-        setter(icons);
+                if (segment.substring(0, segment.indexOf("-")) == "cotidiano") {
+                    setCotidiano(cotidiano => [...cotidiano, data.publicUrl]);
+                }
+                if (segment.substring(0, segment.indexOf("-")) == "electrodomesticos") {
+                    setElectrodomesticos(electrodomesticos => [...electrodomesticos, data.publicUrl]);
+                }
+                if (segment.substring(0, segment.indexOf("-")) == "naturaleza") {
+                    setNature(nature => [...nature, data.publicUrl]);
+                }
+                if (segment.substring(0, segment.indexOf("-")) == "ruidoblanco") {
+                    setRuidoBlanco(ruidoBlanco => [...ruidoBlanco, data.publicUrl]);
+                }
+            })
+        });
     }
 
-    async function getSongIndexFromFolder(folder, songName, arr) {
-        supabase.storage.from("test").list(`${folder}/sounds`, {
-            limit: 10,
-        }).then((res) => {
-            let index = res.data.map(function(song) { return song.name; }).indexOf(songName.substring(songName.lastIndexOf('/') + 1).replace("jpg", "mp3"));
-            navigation.navigate("Player", { songIndex: index, folder })
+    async function getSongIndexFromFolder(icon) {
+        let songUrl = icon.substring(icon.lastIndexOf('/') + 1).replace("jpg", "mp3");
+        supabase.storage.from("test").list(`sounds`).then((res) => {
+            let index = res.data.map(function(song) { return song.name; }).indexOf(songUrl);
+            navigation.navigate("Player", { songIndex: index })
         })
     }
 
     useEffect(() => {
-        getIconsByFolder("naturaleza", setNature);
-        getIconsByFolder("cotidiano", setCotidiano);
-        getIconsByFolder("electrodomesticos", setElectrodomesticos);
-        getIconsByFolder("ruido-blanco", setRuidoBlanco);
+        getIconsByFolder();
     }, [])
 
     return (
@@ -70,7 +73,7 @@ export default function Sounds({ navigation }) {
                                 nature.map((icon, i) => {
                                     return (
                                         <TouchableOpacity key={i} onPress={() => {
-                                            getSongIndexFromFolder("naturaleza", icon, nature);
+                                            getSongIndexFromFolder(icon);
                                         }}>
                                             <Image style={{ width: 70, height: 70, margin: 12, borderRadius: 25 }} source={{ uri: icon }} />
                                         </TouchableOpacity>
@@ -92,7 +95,7 @@ export default function Sounds({ navigation }) {
                                 cotidiano.map((icon, i) => {
                                     return (
                                         <TouchableOpacity key={i} onPress={() => {
-                                            getSongIndexFromFolder("cotidiano", icon, cotidiano);
+                                            getSongIndexFromFolder(icon);
                                         }}>
                                             <Image style={{ width: 70, height: 70, margin: 12, borderRadius: 25 }} source={{ uri: icon }} />
                                         </TouchableOpacity>
@@ -114,7 +117,7 @@ export default function Sounds({ navigation }) {
                                 electrodomesticos.map((icon, i) => {
                                     return (
                                         <TouchableOpacity key={i} onPress={() => {
-                                            getSongIndexFromFolder("electrodomesticos", icon, electrodomesticos);
+                                            getSongIndexFromFolder(icon);
                                         }}>
                                             <Image style={{ width: 70, height: 70, margin: 12, borderRadius: 25 }} source={{ uri: icon }} />
                                         </TouchableOpacity>
@@ -136,7 +139,7 @@ export default function Sounds({ navigation }) {
                                 ruidoBlanco.map((icon, i) => {
                                     return (
                                         <TouchableOpacity key={i} onPress={() => {
-                                            getSongIndexFromFolder("ruido-blanco", icon, ruidoBlanco);
+                                            getSongIndexFromFolder(icon);
                                         }}>
                                             <Image style={{ width: 70, height: 70, margin: 12, borderRadius: 25 }} source={{ uri: icon }} />
                                         </TouchableOpacity>

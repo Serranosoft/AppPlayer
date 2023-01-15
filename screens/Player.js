@@ -6,7 +6,7 @@ import { useFocusEffect } from '@react-navigation/native';
 
 export default function Player({ navigation, route }) {
 
-    const { songIndex, folder } = route.params;
+    const { songIndex } = route.params;
 
     const sound = useRef(new Audio.Sound());
     const intervalWidth = useRef(null)
@@ -79,7 +79,7 @@ export default function Player({ navigation, route }) {
     }
 
     const getSong = async () => {
-        await supabase.storage.from("test").list(`${folder}/sounds/`, { limit: 100 }).then((res) => {
+        await supabase.storage.from("test").list(`sounds/`, { limit: 100 }).then((res) => {
             setFolderLength(res.data.length);
             getSongUrl(res.data[songIndex].name);
             getImage(res.data[songIndex].name);
@@ -87,14 +87,14 @@ export default function Player({ navigation, route }) {
     }
 
     const getSongUrl = (songName) => {
-        const { data, error } = supabase.storage.from('test').getPublicUrl(`${folder}/sounds/${songName}`);
+        const { data, error } = supabase.storage.from('test').getPublicUrl(`sounds/${songName}`);
 
         songTrack.current = data.publicUrl;
         loadAudio();
     }
 
     const getImage = async (songName) => {
-        const { data, error } = supabase.storage.from("test").getPublicUrl(`${folder}/icons/${songName.replace("mp3", "jpg")}`)
+        const { data, error } = supabase.storage.from("test").getPublicUrl(`icons/${songName.replace("mp3", "jpg")}`)
         setIcon(data.publicUrl);
     }
 
@@ -188,10 +188,6 @@ export default function Player({ navigation, route }) {
         }, 1000)
     }
 
-    /*
-    
-        BUG: Debo ocultar botones hasta que la canción actual se cargue
-    */
     return (
         <>
             <ImageBackground style={{ flex: 1, justifyContent: "flex-end" }} resizeMode="cover" source={{ uri: icon }}>
@@ -224,7 +220,7 @@ export default function Player({ navigation, route }) {
                                 } else {
                                     nextSongIndex.current -= 1;
                                 }
-                                navigation.push("Player", { songIndex: nextSongIndex.current, folder, icon })
+                                navigation.push("Player", { songIndex: nextSongIndex.current })
                                 resetAll();
                             }}>
                                 <Image style={{
@@ -249,7 +245,7 @@ export default function Player({ navigation, route }) {
                                 } else {
                                     nextSongIndex.current += 1;
                                 }
-                                navigation.push("Player", { songIndex: nextSongIndex.current, folder, icon })
+                                navigation.push("Player", { songIndex: nextSongIndex.current })
                                 resetAll();
                             }}>
                                 <Image style={{

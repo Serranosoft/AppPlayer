@@ -1,40 +1,35 @@
 import { useEffect, useState } from "react";
 import { Image, ImageBackground, ScrollView, StatusBar, Text, TouchableOpacity, View } from "react-native"
 import { supabase } from "../src/supabaseClient";
-import { Dimensions } from 'react-native';
 
 export default function Nanas({ navigation }) {
 
     // Subcategorias.
     const [nanas, setNanas] = useState([]);
 
-    async function getIconsByFolder(folder, setter) {
-        let icons = [];
-
-        const { data, error } = await supabase.storage.from("test").list(`${folder}/icons`, { limit: 100 });
-
-        data.forEach(icon => {
-            if (data !== null && data.length > 0 && icon.name !== ".emptyFolderPlaceholder") {
-                const { data, error } = supabase.storage.from('test').getPublicUrl(`${folder}/icons/${icon.name}`);
-                icons.push(data.publicUrl);
-            }
-        })
-
-        setter(icons);
+    async function getIconsByFolder() {
+        await supabase.storage.from("test").list("icons").then((res) => {
+            res.data.forEach((song) => {
+                const { data, error } = supabase.storage.from('test').getPublicUrl(`icons/${song.name}`);
+                let segment = data.publicUrl.substring(data.publicUrl.lastIndexOf('/') + 1)
+                console.log(segment);
+                if (segment.substring(0, segment.indexOf("-")) == "nana") {
+                    setNanas(nanas => [...nanas, data.publicUrl]);
+                }
+            })
+        });
     }
 
-    async function getSongIndexFromFolder(folder, songName, arr) {
-
-        supabase.storage.from("test").list(`${folder}/sounds`, {
-            limit: 10,
-        }).then((res) => {
-            let index = res.data.map(function(song) { return song.name; }).indexOf(songName.substring(songName.lastIndexOf('/') + 1).replace("jpg", "mp3"));
-            navigation.navigate("Player", { songIndex: index, folder })
+    async function getSongIndexFromFolder(icon) {
+        let songUrl = icon.substring(icon.lastIndexOf('/') + 1).replace("jpg", "mp3");
+        supabase.storage.from("test").list(`sounds`).then((res) => {
+            let index = res.data.map(function(song) { return song.name; }).indexOf(songUrl);
+            navigation.navigate("Player", { songIndex: index })
         })
     }
 
     useEffect(() => {
-        getIconsByFolder("nanas", setNanas);
+        getIconsByFolder();
     }, [])
 
     return (
@@ -65,7 +60,7 @@ export default function Nanas({ navigation }) {
                                     return (
                                         <View style={{width: "30%", marginHorizontal: 6, marginBottom: 12}}>
                                             <TouchableOpacity key={i} onPress={() => {
-                                                getSongIndexFromFolder("nanas", icon, nanas);
+                                                getSongIndexFromFolder(icon);
                                             }}>
                                                 <Image resizeMode="contain" style={{ width: "100%", flex: 1, height: 100, borderRadius: 25 }} source={{ uri: icon }} />
                                             </TouchableOpacity>
