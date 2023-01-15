@@ -72,11 +72,13 @@ export default function Sounds({ navigation }) {
                             {
                                 cotidiano.map((icon, i) => {
                                     return (
-                                        <TouchableOpacity key={i} onPress={() => {
-                                            getSongIndexFromFolder(icon);
-                                        }}>
-                                            <Image style={{ width: 70, height: 70, margin: 12, borderRadius: 25 }} source={{ uri: icon }} />
-                                        </TouchableOpacity>
+                                        <View key={i} style={{width: "30%", marginHorizontal: 6, marginBottom: 12}}>
+                                            <TouchableOpacity onPress={() => {
+                                                getSongIndexFromFolder(icon);
+                                            }}>
+                                                <Image resizeMode="contain" style={{ width: "100%", flex: 1, height: 100, borderRadius: 25 }} source={{ uri: icon }} />
+                                            </TouchableOpacity>
+                                        </View>
                                     )
                                 })
                             }
@@ -94,11 +96,13 @@ export default function Sounds({ navigation }) {
                             {
                                 electrodomesticos.map((icon, i) => {
                                     return (
-                                        <TouchableOpacity key={i} onPress={() => {
-                                            getSongIndexFromFolder(icon);
-                                        }}>
-                                            <Image style={{ width: 70, height: 70, margin: 12, borderRadius: 25 }} source={{ uri: icon }} />
-                                        </TouchableOpacity>
+                                        <View key={i} style={{width: "30%", marginHorizontal: 6, marginBottom: 12}}>
+                                            <TouchableOpacity onPress={() => {
+                                                getSongIndexFromFolder(icon);
+                                            }}>
+                                                <Image resizeMode="contain" style={{ width: "100%", flex: 1, height: 100, borderRadius: 25 }} source={{ uri: icon }} />
+                                            </TouchableOpacity>
+                                        </View>
                                     )
                                 })
                             }
@@ -116,11 +120,13 @@ export default function Sounds({ navigation }) {
                             {
                                 nature.map((icon, i) => {
                                     return (
-                                        <TouchableOpacity key={i} onPress={() => {
-                                            getSongIndexFromFolder(icon);
-                                        }}>
-                                            <Image style={{ width: 70, height: 70, margin: 12, borderRadius: 25 }} source={{ uri: icon }} />
-                                        </TouchableOpacity>
+                                        <View key={i} style={{width: "30%", marginHorizontal: 6, marginBottom: 12}}>
+                                            <TouchableOpacity onPress={() => {
+                                                getSongIndexFromFolder(icon);
+                                            }}>
+                                                <Image resizeMode="contain" style={{ width: "100%", flex: 1, height: 100, borderRadius: 25 }} source={{ uri: icon }} />
+                                            </TouchableOpacity>
+                                        </View>
                                     )
                                 })
                             }
@@ -140,11 +146,13 @@ export default function Sounds({ navigation }) {
                             {
                                 ruidoBlanco.map((icon, i) => {
                                     return (
-                                        <TouchableOpacity key={i} onPress={() => {
-                                            getSongIndexFromFolder(icon);
-                                        }}>
-                                            <Image style={{ width: 70, height: 70, margin: 12, borderRadius: 25 }} source={{ uri: icon }} />
-                                        </TouchableOpacity>
+                                        <View key={i} style={{width: "30%", marginHorizontal: 6, marginBottom: 12}}>
+                                            <TouchableOpacity onPress={() => {
+                                                getSongIndexFromFolder(icon);
+                                            }}>
+                                                <Image resizeMode="contain" style={{ width: "100%", flex: 1, height: 100, borderRadius: 25 }} source={{ uri: icon }} />
+                                            </TouchableOpacity>
+                                        </View>
                                     )
                                 })
                             }

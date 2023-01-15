@@ -12,7 +12,6 @@ export default function Nanas({ navigation }) {
             res.data.forEach((song) => {
                 const { data, error } = supabase.storage.from('test').getPublicUrl(`icons/${song.name}`);
                 let segment = data.publicUrl.substring(data.publicUrl.lastIndexOf('/') + 1)
-                console.log(segment);
                 if (segment.substring(0, segment.indexOf("-")) == "nana") {
                     setNanas(nanas => [...nanas, data.publicUrl]);
                 }
@@ -58,8 +57,8 @@ export default function Nanas({ navigation }) {
                             {
                                 nanas.map((icon, i)=> {
                                     return (
-                                        <View style={{width: "30%", marginHorizontal: 6, marginBottom: 12}}>
-                                            <TouchableOpacity key={i} onPress={() => {
+                                        <View key={i} style={{width: "30%", marginHorizontal: 6, marginBottom: 12}}>
+                                            <TouchableOpacity onPress={() => {
                                                 getSongIndexFromFolder(icon);
                                             }}>
                                                 <Image resizeMode="contain" style={{ width: "100%", flex: 1, height: 100, borderRadius: 25 }} source={{ uri: icon }} />
