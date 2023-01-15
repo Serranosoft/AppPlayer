@@ -20,7 +20,7 @@ export default function Sounds({ navigation }) {
                 if (segment.substring(0, segment.indexOf("-")) == "cotidiano") {
                     setCotidiano(cotidiano => [...cotidiano, data.publicUrl]);
                 }
-                if (segment.substring(0, segment.indexOf("-")) == "electrodomesticos") {
+                if (segment.substring(0, segment.indexOf("-")) == "electrodomestico") {
                     setElectrodomesticos(electrodomesticos => [...electrodomesticos, data.publicUrl]);
                 }
                 if (segment.substring(0, segment.indexOf("-")) == "naturaleza") {
@@ -36,7 +36,7 @@ export default function Sounds({ navigation }) {
     async function getSongIndexFromFolder(icon) {
         let songUrl = icon.substring(icon.lastIndexOf('/') + 1).replace("jpg", "mp3");
         supabase.storage.from("test").list(`sounds`).then((res) => {
-            let index = res.data.map(function(song) { return song.name; }).indexOf(songUrl);
+            let index = res.data.map(function (song) { return song.name; }).indexOf(songUrl);
             navigation.navigate("Player", { songIndex: index })
         })
     }
@@ -63,30 +63,8 @@ export default function Sounds({ navigation }) {
                 }}
                 >
                     <View style={{ marginVertical: 20 }}>
-                        <Text style={{ marginLeft: 12, marginBottom: 20, fontSize: 30, color: "#95E3EB", fontFamily: "heading" }}>Naturaleza</Text>
-                        
-                        <View style={{
-                            flexDirection: "row",
-                            flexWrap: "wrap"
-                        }}>
-                            {
-                                nature.map((icon, i) => {
-                                    return (
-                                        <TouchableOpacity key={i} onPress={() => {
-                                            getSongIndexFromFolder(icon);
-                                        }}>
-                                            <Image style={{ width: 70, height: 70, margin: 12, borderRadius: 25 }} source={{ uri: icon }} />
-                                        </TouchableOpacity>
-                                    )
-                                })
-                            }
-                        </View>
-
-                    </View>
-
-                    <View style={{ marginVertical: 20 }}>
                         <Text style={{ marginLeft: 12, marginBottom: 20, fontSize: 30, color: "#95E3EB", fontFamily: "heading" }}>Cotidiano</Text>
-                        
+
                         <View style={{
                             flexDirection: "row",
                             flexWrap: "wrap"
@@ -108,7 +86,7 @@ export default function Sounds({ navigation }) {
 
                     <View style={{ marginVertical: 20 }}>
                         <Text style={{ marginLeft: 12, marginBottom: 20, fontSize: 30, color: "#95E3EB", fontFamily: "heading" }}>Electrodomésticos</Text>
-                        
+
                         <View style={{
                             flexDirection: "row",
                             flexWrap: "wrap"
@@ -129,8 +107,32 @@ export default function Sounds({ navigation }) {
                     </View>
 
                     <View style={{ marginVertical: 20 }}>
+                        <Text style={{ marginLeft: 12, marginBottom: 20, fontSize: 30, color: "#95E3EB", fontFamily: "heading" }}>Naturaleza</Text>
+
+                        <View style={{
+                            flexDirection: "row",
+                            flexWrap: "wrap"
+                        }}>
+                            {
+                                nature.map((icon, i) => {
+                                    return (
+                                        <TouchableOpacity key={i} onPress={() => {
+                                            getSongIndexFromFolder(icon);
+                                        }}>
+                                            <Image style={{ width: 70, height: 70, margin: 12, borderRadius: 25 }} source={{ uri: icon }} />
+                                        </TouchableOpacity>
+                                    )
+                                })
+                            }
+                        </View>
+
+                    </View>
+
+
+
+                    <View style={{ marginVertical: 20 }}>
                         <Text style={{ marginLeft: 12, marginBottom: 20, fontSize: 30, color: "#95E3EB", fontFamily: "heading" }}>Ruido blanco</Text>
-                        
+
                         <View style={{
                             flexDirection: "row",
                             flexWrap: "wrap"

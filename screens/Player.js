@@ -79,7 +79,7 @@ export default function Player({ navigation, route }) {
     }
 
     const getSong = async () => {
-        await supabase.storage.from("test").list(`sounds/`, { limit: 100 }).then((res) => {
+        await supabase.storage.from("test").list(`sounds/`).then((res) => {
             setFolderLength(res.data.length);
             getSongUrl(res.data[songIndex].name);
             getImage(res.data[songIndex].name);
