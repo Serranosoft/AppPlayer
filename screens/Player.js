@@ -1,8 +1,9 @@
-import { ImageBackground, View, TouchableOpacity, BackHandler, Image, Text } from "react-native";
+import { ImageBackground, View, TouchableOpacity, BackHandler, Image, Text, Pressable } from "react-native";
 import { Audio, InterruptionModeAndroid, InterruptionModeIOS } from 'expo-av';
 import { useCallback, useEffect, useRef, useState } from "react";
 import { supabase } from "../src/supabaseClient"
 import { useFocusEffect } from '@react-navigation/native';
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
 
 export default function Player({ navigation, route }) {
 
@@ -30,6 +31,36 @@ export default function Player({ navigation, route }) {
     const [timer, setTimer] = useState(0);
     // Ilustración a renderizar en pantalla.
     const [icon, setIcon] = useState(null);
+
+    const tap =
+        Gesture.Pan().runOnJS(true)
+            .activeOffsetX([-100, 100])
+            .onEnd((e) => {
+                if (e.translationX > 0) {
+                    // Anterior canción.
+                    if (songIndex === 0) {
+                        nextSongIndex.current = folderLength - 1;
+                    } else {
+                        nextSongIndex.current -= 1;
+                    }
+
+                    resetAll().then(() => {
+                        getSong();
+                    });
+                } else {
+                    // Siguiente canción.
+                    if (songIndex === folderLength - 1) {
+                        nextSongIndex.current = 0;
+                    } else {
+                        nextSongIndex.current += 1;
+                    }
+
+                    resetAll().then(() => {
+                        getSong();
+                    });
+                }
+
+            });
 
     useEffect(() => {
         const applyMode = async () => {
@@ -67,8 +98,8 @@ export default function Player({ navigation, route }) {
         }, [])
     );
 
-    const resetAll = () => {
-        window.clearInterval(intervalWidth);
+    const resetAll = async () => {
+        window.clearInterval(intervalWidth.current);
         sound.current.stopAsync();
         sound.current.unloadAsync();
         setIsLoop(false);
@@ -81,8 +112,8 @@ export default function Player({ navigation, route }) {
     const getSong = async () => {
         await supabase.storage.from("test").list(`sounds/`).then((res) => {
             setFolderLength(res.data.length);
-            getSongUrl(res.data[songIndex].name);
-            getImage(res.data[songIndex].name);
+            getSongUrl(res.data[nextSongIndex.current].name);
+            getImage(res.data[nextSongIndex.current].name);
         });
     }
 
@@ -101,7 +132,7 @@ export default function Player({ navigation, route }) {
     const loadAudio = async () => {
         const checkLoaded = await sound.current.getStatusAsync();
         if (checkLoaded.isLoaded === false) {
-            await sound.current.loadAsync({ uri: songTrack.current }, {}, true).then(() => {
+            await sound.current.loadAsync({ uri: songTrack.current }, {}, false).then(() => {
                 getAudioDetails();
             });
         }
@@ -189,21 +220,19 @@ export default function Player({ navigation, route }) {
     }
 
     return (
-        <>
-            <ImageBackground style={{ flex: 1, justifyContent: "flex-end" }} resizeMode="cover" source={{ uri: icon }}>
+        <ImageBackground style={{ flex: 1 }} resizeMode="cover" source={{ uri: icon + "?wyz" }}>
+            <GestureDetector gesture={tap}>
+                <View style={{ flex: 1, justifyContent: "flex-end" }}>
 
+                    <View style={{ backgroundColor: "rgba(17,66,130,0.75)", paddingHorizontal: 30, paddingTop: 40, paddingBottom: 20, justifyContent: "center", alignItems: "center", borderTopRightRadius: 50, borderTopLeftRadius: 50 }}>
 
-                <View style={{ backgroundColor: "rgba(17,66,130,0.75)", paddingHorizontal: 30, paddingTop: 40, paddingBottom: 20, justifyContent: "center", alignItems: "center", borderTopRightRadius: 50, borderTopLeftRadius: 50 }}>
-
-                    <View style={{ width: "100%", height: 15, backgroundColor: "#858585", marginBottom: 20, borderRadius: 15 }}>
-                        <View style={{ width: `${loadingWidth}%`, backgroundColor: "#e3f6f9", height: 15, borderRadius: 15 }}></View>
-                    </View>
-
-                    {soundDetails !== null &&
+                        <View style={{ width: "100%", height: 15, backgroundColor: "#858585", marginBottom: 20, borderRadius: 15 }}>
+                            <View style={{ width: `${loadingWidth}%`, backgroundColor: "#e3f6f9", height: 15, borderRadius: 15 }}></View>
+                        </View>
 
                         <View style={{ width: "100%", paddingVertical: 0, flexDirection: "row", alignItems: "center", position: "relative", justifyContent: "space-around" }}>
 
-                            <TouchableOpacity onPress={() => {
+                            <Pressable onPress={() => {
                                 muteAudio();
                             }}>
                                 <Image style={{
@@ -212,16 +241,18 @@ export default function Player({ navigation, route }) {
                                     resizeMode: "contain"
                                 }}
                                     source={isMuted ? require("../assets/mute-on.png") : require("../assets/mute-off.png")} />
-                            </TouchableOpacity>
+                            </Pressable>
 
-                            <TouchableOpacity onPress={() => {
+                            <Pressable onPress={() => {
                                 if (songIndex === 0) {
                                     nextSongIndex.current = folderLength - 1;
                                 } else {
                                     nextSongIndex.current -= 1;
                                 }
-                                navigation.push("Player", { songIndex: nextSongIndex.current })
-                                resetAll();
+
+                                resetAll().then(() => {
+                                    getSong();
+                                });
                             }}>
                                 <Image style={{
                                     width: 45,
@@ -229,8 +260,8 @@ export default function Player({ navigation, route }) {
                                     resizeMode: "contain"
                                 }}
                                     source={require("../assets/prev.png")} />
-                            </TouchableOpacity>
-                            <TouchableOpacity onPress={() => {
+                            </Pressable>
+                            <Pressable onPress={() => {
                                 handleAudio();
                             }}>
                                 {isPlaying ?
@@ -238,15 +269,17 @@ export default function Player({ navigation, route }) {
                                     :
                                     <Image style={{ width: 45, height: 45 }} source={require("../assets/play.png")} />
                                 }
-                            </TouchableOpacity>
-                            <TouchableOpacity onPress={() => {
+                            </Pressable>
+                            <Pressable onPress={() => {
                                 if (songIndex === folderLength - 1) {
                                     nextSongIndex.current = 0;
                                 } else {
                                     nextSongIndex.current += 1;
                                 }
-                                navigation.push("Player", { songIndex: nextSongIndex.current })
-                                resetAll();
+
+                                resetAll().then(() => {
+                                    getSong();
+                                });
                             }}>
                                 <Image style={{
                                     width: 45,
@@ -254,9 +287,9 @@ export default function Player({ navigation, route }) {
                                     resizeMode: "contain"
                                 }}
                                     source={require("../assets/next.png")} />
-                            </TouchableOpacity>
+                            </Pressable>
 
-                            <TouchableOpacity onPress={() => {
+                            <Pressable onPress={() => {
                                 LoopAudio();
                             }}>
                                 <Image style={{
@@ -265,18 +298,16 @@ export default function Player({ navigation, route }) {
                                     resizeMode: "contain"
                                 }}
                                     source={isLoop ? require("../assets/loop-on.png") : require("../assets/loop-off.png")} />
-                            </TouchableOpacity>
+                            </Pressable>
 
                         </View>
-                    }
 
+
+                    </View>
 
                 </View>
-
-            </ImageBackground>
-
-        </>
+            </GestureDetector>
+        </ImageBackground>
     )
-
 
 }

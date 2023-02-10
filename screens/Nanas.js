@@ -9,13 +9,15 @@ export default function Nanas({ navigation }) {
 
     async function getIconsByFolder() {
         await supabase.storage.from("test").list("icons").then((res) => {
-            res.data.forEach((song) => {
-                const { data, error } = supabase.storage.from('test').getPublicUrl(`icons/${song.name}`);
-                let segment = data.publicUrl.substring(data.publicUrl.lastIndexOf('/') + 1)
-                if (segment.substring(0, segment.indexOf("-")) == "nana") {
-                    setNanas(nanas => [...nanas, data.publicUrl]);
-                }
-            })
+            if (res !== null) {
+                res.data.forEach((song) => {
+                    const { data, error } = supabase.storage.from('test').getPublicUrl(`icons/${song.name}`);
+                    let segment = data.publicUrl.substring(data.publicUrl.lastIndexOf('/') + 1)
+                    if (segment.substring(0, segment.indexOf("-")) == "nana") {
+                        setNanas(nanas => [...nanas, data.publicUrl]);
+                    }
+                })
+            }
         });
     }
 

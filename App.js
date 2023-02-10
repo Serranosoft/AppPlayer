@@ -8,6 +8,7 @@ import Player from './screens/Player';
 import * as SplashScreen from 'expo-splash-screen';
 import { Text, View } from 'react-native';
 import * as Font from 'expo-font';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -31,23 +32,24 @@ export default function App() {
     }
 
     return (
-        <View style={{flex: 1}} onLayout={onLayoutRootView}>
-            <NavigationContainer>
-                <Text></Text>
-                <Stack.Navigator initialRouteName='Home'>
-                    <Stack.Screen
-                        name="Home"
-                        component={Home}
-                        options={{ headerShown: false }}
-                    />
-                    <Stack.Screen
-                        name="Player"
-                        component={Player}
-                        options={{ headerShown: false }}
-                    />
-                </Stack.Navigator>
-            </NavigationContainer>
-        </View>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+            <View style={{flex: 1}} onLayout={onLayoutRootView}>
+                <NavigationContainer>
+                    <Stack.Navigator initialRouteName='Home'>
+                        <Stack.Screen
+                            name="Home"
+                            component={Home}
+                            options={{ headerShown: false }}
+                        />
+                        <Stack.Screen
+                            name="Player"
+                            component={Player}
+                            options={{ headerShown: false }}
+                        />
+                    </Stack.Navigator>
+                </NavigationContainer>
+            </View>
+        </GestureHandlerRootView>
 
     );
 

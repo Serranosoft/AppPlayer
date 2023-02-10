@@ -10,26 +10,27 @@ export default function Sounds({ navigation }) {
     const [electrodomesticos, setElectrodomesticos] = useState([]);
     const [ruidoBlanco, setRuidoBlanco] = useState([]);
 
-
     async function getIconsByFolder() {
         await supabase.storage.from("test").list("icons").then((res) => {
-            res.data.forEach((song) => {
-                const { data, error } = supabase.storage.from('test').getPublicUrl(`icons/${song.name}`);
-                let segment = data.publicUrl.substring(data.publicUrl.lastIndexOf('/') + 1)
-
-                if (segment.substring(0, segment.indexOf("-")) == "cotidiano") {
-                    setCotidiano(cotidiano => [...cotidiano, data.publicUrl]);
-                }
-                if (segment.substring(0, segment.indexOf("-")) == "electrodomestico") {
-                    setElectrodomesticos(electrodomesticos => [...electrodomesticos, data.publicUrl]);
-                }
-                if (segment.substring(0, segment.indexOf("-")) == "naturaleza") {
-                    setNature(nature => [...nature, data.publicUrl]);
-                }
-                if (segment.substring(0, segment.indexOf("-")) == "ruidoblanco") {
-                    setRuidoBlanco(ruidoBlanco => [...ruidoBlanco, data.publicUrl]);
-                }
-            })
+            if (res !== null) {
+                res.data.forEach((song) => {
+                    const { data, error } = supabase.storage.from('test').getPublicUrl(`icons/${song.name}`);
+                    let segment = data.publicUrl.substring(data.publicUrl.lastIndexOf('/') + 1)
+    
+                    if (segment.substring(0, segment.indexOf("-")) == "cotidiano") {
+                        setCotidiano(cotidiano => [...cotidiano, data.publicUrl]);
+                    }
+                    if (segment.substring(0, segment.indexOf("-")) == "electrodomestico") {
+                        setElectrodomesticos(electrodomesticos => [...electrodomesticos, data.publicUrl]);
+                    }
+                    if (segment.substring(0, segment.indexOf("-")) == "naturaleza") {
+                        setNature(nature => [...nature, data.publicUrl]);
+                    }
+                    if (segment.substring(0, segment.indexOf("-")) == "ruidoblanco") {
+                        setRuidoBlanco(ruidoBlanco => [...ruidoBlanco, data.publicUrl]);
+                    }
+                })
+            }
         });
     }
 
@@ -76,7 +77,7 @@ export default function Sounds({ navigation }) {
                                             <TouchableOpacity onPress={() => {
                                                 getSongIndexFromFolder(icon);
                                             }}>
-                                                <Image resizeMode="contain" style={{ width: "100%", flex: 1, height: 100, borderRadius: 25 }} source={{ uri: icon }} />
+                                                <Image resizeMode="contain" style={{ width: "100%", flex: 1, height: 100, borderRadius: 25 }} source={{ uri: icon+"?wyz" }} />
                                             </TouchableOpacity>
                                         </View>
                                     )
