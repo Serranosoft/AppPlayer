@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { supabase } from "../src/supabaseClient"
 import { useFocusEffect } from '@react-navigation/native';
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming }/* , { useSharedValue } */ from "react-native-reanimated";
 
 export default function Player({ navigation, route }) {
 
@@ -31,34 +32,47 @@ export default function Player({ navigation, route }) {
     const [timer, setTimer] = useState(0);
     // Ilustración a renderizar en pantalla.
     const [icon, setIcon] = useState(null);
+    // Posición para animar
+    const position = useSharedValue(0);
 
     const tap =
         Gesture.Pan().runOnJS(true)
-            .activeOffsetX([-100, 100])
+            .activeOffsetX([50, 50])
+            .onUpdate((e) => {
+                position.value = e.translationX;
+            })
             .onEnd((e) => {
-                if (e.translationX > 0) {
+                position.value = withTiming(position.value * 10, { duration: 150, easing: Easing.ease });
+                if (e.translationX > 60) {
                     // Anterior canción.
-                    if (songIndex === 0) {
+                    if (nextSongIndex.current === 0) {
                         nextSongIndex.current = folderLength - 1;
                     } else {
                         nextSongIndex.current -= 1;
                     }
 
                     resetAll().then(() => {
-                        getSong();
+                        getSong().then(() => {
+                            position.value = 0;
+                        });
                     });
-                } else {
+                } else if (e.translationX < -60) {
                     // Siguiente canción.
-                    if (songIndex === folderLength - 1) {
+                    if (nextSongIndex.current === folderLength - 1) {
                         nextSongIndex.current = 0;
                     } else {
                         nextSongIndex.current += 1;
                     }
 
                     resetAll().then(() => {
-                        getSong();
+                        getSong().then(() => {
+                            position.value = 0
+                        });
                     });
+                } else {
+                    position.value = withTiming(0, { duration: 150, easing: Easing.ease });
                 }
+
 
             });
 
@@ -219,95 +233,102 @@ export default function Player({ navigation, route }) {
         }, 1000)
     }
 
+    const animatedStyle = useAnimatedStyle(() => ({
+        transform: [{ translateX: position.value }],
+        flex: 1,
+    }));
+
     return (
-        <ImageBackground style={{ flex: 1 }} resizeMode="cover" source={{ uri: icon + "?wyz" }}>
-            <GestureDetector gesture={tap}>
-                <View style={{ flex: 1, justifyContent: "flex-end" }}>
+        <View style={{ flex: 1, backgroundColor: "rgba(17,66,130,0.75)" }}>
+            <Animated.View style={[animatedStyle]}>
 
-                    <View style={{ backgroundColor: "rgba(17,66,130,0.75)", paddingHorizontal: 30, paddingTop: 40, paddingBottom: 20, justifyContent: "center", alignItems: "center", borderTopRightRadius: 50, borderTopLeftRadius: 50 }}>
+                <ImageBackground style={{ flex: 1 }} resizeMode="cover" source={{ uri: icon + "?wyz" }}>
+                    <GestureDetector gesture={tap}>
+                        <View style={{ flex: 1 }}></View>
+                    </GestureDetector>
+                </ImageBackground>
+            </Animated.View>
 
-                        <View style={{ width: "100%", height: 15, backgroundColor: "#858585", marginBottom: 20, borderRadius: 15 }}>
-                            <View style={{ width: `${loadingWidth}%`, backgroundColor: "#e3f6f9", height: 15, borderRadius: 15 }}></View>
-                        </View>
+            <View style={{ position: "absolute", bottom: "0%", backgroundColor: "rgba(17,66,130,0.75)", paddingHorizontal: 30, paddingTop: 40, paddingBottom: 20, justifyContent: "center", alignItems: "center", borderTopRightRadius: 50, borderTopLeftRadius: 50 }}>
 
-                        <View style={{ width: "100%", paddingVertical: 0, flexDirection: "row", alignItems: "center", position: "relative", justifyContent: "space-around" }}>
+                <View style={{ width: "100%", height: 15, backgroundColor: "#858585", marginBottom: 20, borderRadius: 15 }}>
+                    <View style={{ width: `${loadingWidth}%`, backgroundColor: "#e3f6f9", height: 15, borderRadius: 15 }}></View>
+                </View>
 
-                            <Pressable onPress={() => {
-                                muteAudio();
-                            }}>
-                                <Image style={{
-                                    width: 45,
-                                    height: 45,
-                                    resizeMode: "contain"
-                                }}
-                                    source={isMuted ? require("../assets/mute-on.png") : require("../assets/mute-off.png")} />
-                            </Pressable>
+                <View style={{ width: "100%", paddingVertical: 0, flexDirection: "row", alignItems: "center", position: "relative", justifyContent: "space-around" }}>
 
-                            <Pressable onPress={() => {
-                                if (songIndex === 0) {
-                                    nextSongIndex.current = folderLength - 1;
-                                } else {
-                                    nextSongIndex.current -= 1;
-                                }
+                    <Pressable onPress={() => {
+                        muteAudio();
+                    }}>
+                        <Image style={{
+                            width: 45,
+                            height: 45,
+                            resizeMode: "contain"
+                        }}
+                            source={isMuted ? require("../assets/mute-on.png") : require("../assets/mute-off.png")} />
+                    </Pressable>
 
-                                resetAll().then(() => {
-                                    getSong();
-                                });
-                            }}>
-                                <Image style={{
-                                    width: 45,
-                                    height: 45,
-                                    resizeMode: "contain"
-                                }}
-                                    source={require("../assets/prev.png")} />
-                            </Pressable>
-                            <Pressable onPress={() => {
-                                handleAudio();
-                            }}>
-                                {isPlaying ?
-                                    <Image style={{ width: 45, height: 45 }} source={require("../assets/pause.png")} />
-                                    :
-                                    <Image style={{ width: 45, height: 45 }} source={require("../assets/play.png")} />
-                                }
-                            </Pressable>
-                            <Pressable onPress={() => {
-                                if (songIndex === folderLength - 1) {
-                                    nextSongIndex.current = 0;
-                                } else {
-                                    nextSongIndex.current += 1;
-                                }
+                    <Pressable onPress={() => {
+                        if (nextSongIndex.current === 0) {
+                            nextSongIndex.current = folderLength - 1;
+                        } else {
+                            nextSongIndex.current -= 1;
+                        }
 
-                                resetAll().then(() => {
-                                    getSong();
-                                });
-                            }}>
-                                <Image style={{
-                                    width: 45,
-                                    height: 45,
-                                    resizeMode: "contain"
-                                }}
-                                    source={require("../assets/next.png")} />
-                            </Pressable>
+                        resetAll().then(() => {
+                            getSong();
+                        });
+                    }}>
+                        <Image style={{
+                            width: 45,
+                            height: 45,
+                            resizeMode: "contain"
+                        }}
+                            source={require("../assets/prev.png")} />
+                    </Pressable>
+                    <Pressable onPress={() => {
+                        handleAudio();
+                    }}>
+                        {isPlaying ?
+                            <Image style={{ width: 45, height: 45 }} source={require("../assets/pause.png")} />
+                            :
+                            <Image style={{ width: 45, height: 45 }} source={require("../assets/play.png")} />
+                        }
+                    </Pressable>
+                    <Pressable onPress={() => {
+                        if (nextSongIndex.current === folderLength - 1) {
+                            nextSongIndex.current = 0;
+                        } else {
+                            nextSongIndex.current += 1;
+                        }
 
-                            <Pressable onPress={() => {
-                                LoopAudio();
-                            }}>
-                                <Image style={{
-                                    width: 45,
-                                    height: 45,
-                                    resizeMode: "contain"
-                                }}
-                                    source={isLoop ? require("../assets/loop-on.png") : require("../assets/loop-off.png")} />
-                            </Pressable>
+                        resetAll().then(() => {
+                            getSong();
+                        });
+                    }}>
+                        <Image style={{
+                            width: 45,
+                            height: 45,
+                            resizeMode: "contain"
+                        }}
+                            source={require("../assets/next.png")} />
+                    </Pressable>
 
-                        </View>
-
-
-                    </View>
+                    <Pressable onPress={() => {
+                        LoopAudio();
+                    }}>
+                        <Image style={{
+                            width: 45,
+                            height: 45,
+                            resizeMode: "contain"
+                        }}
+                            source={isLoop ? require("../assets/loop-on.png") : require("../assets/loop-off.png")} />
+                    </Pressable>
 
                 </View>
-            </GestureDetector>
-        </ImageBackground>
+            </View>
+        </View>
+
     )
 
 }
