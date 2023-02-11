@@ -77,7 +77,7 @@ export default function Sounds({ navigation }) {
                                             <TouchableOpacity onPress={() => {
                                                 getSongIndexFromFolder(icon);
                                             }}>
-                                                <Image resizeMode="contain" style={{ width: "100%", flex: 1, height: 100, borderRadius: 25 }} source={{ uri: icon+"?wyz" }} />
+                                                <Image resizeMode="contain" style={{ width: "100%", flex: 1, height: 100, borderRadius: 25 }} source={{ uri: icon+"?cache2" }} />
                                             </TouchableOpacity>
                                         </View>
                                     )
@@ -101,7 +101,7 @@ export default function Sounds({ navigation }) {
                                             <TouchableOpacity onPress={() => {
                                                 getSongIndexFromFolder(icon);
                                             }}>
-                                                <Image resizeMode="contain" style={{ width: "100%", flex: 1, height: 100, borderRadius: 25 }} source={{ uri: icon }} />
+                                                <Image resizeMode="contain" style={{ width: "100%", flex: 1, height: 100, borderRadius: 25 }} source={{ uri: icon+"?cache2" }} />
                                             </TouchableOpacity>
                                         </View>
                                     )
@@ -125,7 +125,7 @@ export default function Sounds({ navigation }) {
                                             <TouchableOpacity onPress={() => {
                                                 getSongIndexFromFolder(icon);
                                             }}>
-                                                <Image resizeMode="contain" style={{ width: "100%", flex: 1, height: 100, borderRadius: 25 }} source={{ uri: icon }} />
+                                                <Image resizeMode="contain" style={{ width: "100%", flex: 1, height: 100, borderRadius: 25 }} source={{ uri: icon+"?cache2" }} />
                                             </TouchableOpacity>
                                         </View>
                                     )
@@ -151,7 +151,7 @@ export default function Sounds({ navigation }) {
                                             <TouchableOpacity onPress={() => {
                                                 getSongIndexFromFolder(icon);
                                             }}>
-                                                <Image resizeMode="contain" style={{ width: "100%", flex: 1, height: 100, borderRadius: 25 }} source={{ uri: icon }} />
+                                                <Image resizeMode="contain" style={{ width: "100%", flex: 1, height: 100, borderRadius: 25 }} source={{ uri: icon+"?cache2" }} />
                                             </TouchableOpacity>
                                         </View>
                                     )

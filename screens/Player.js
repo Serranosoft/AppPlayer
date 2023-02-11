@@ -140,7 +140,7 @@ export default function Player({ navigation, route }) {
     }
 
     const getImage = async (songName) => {
-        const { data, error } = supabase.storage.from("test").getPublicUrl(`icons/${songName.replace("mp3", "jpg")}`)
+        const { data, error } = supabase.storage.from("test").getPublicUrl(`icons/${songName.replace("mp3", "jpg")}?cache2`)
         setIcon(data.publicUrl);
     }
 
@@ -242,12 +242,12 @@ export default function Player({ navigation, route }) {
     return (
         <View style={{ flex: 1, backgroundColor: "rgba(17,66,130,0.75)" }}>
             <Animated.View style={[animatedStyle]}>
-
-                <ImageBackground style={{ flex: 1 }} resizeMode="cover" source={{ uri: icon + "?wyz" }}>
-                    <GestureDetector gesture={tap}>
-                        <View style={{ flex: 1 }}></View>
-                    </GestureDetector>
-                </ImageBackground>
+                <GestureDetector gesture={tap}>
+                    <View style={{ flex: 1 }}>
+                        <Image resizeMode="stretch" style={{flex: 1}} source={{uri: icon+"?cache2"}}>
+                        </Image>
+                    </View>
+                </GestureDetector>
             </Animated.View>
 
             <View style={{ position: "absolute", bottom: "0%", backgroundColor: "rgba(17,66,130,0.75)", paddingHorizontal: 30, paddingTop: 40, paddingBottom: 20, justifyContent: "center", alignItems: "center", borderTopRightRadius: 50, borderTopLeftRadius: 50 }}>
