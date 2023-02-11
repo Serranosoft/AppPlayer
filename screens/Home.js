@@ -28,7 +28,7 @@ export default function Home() {
                 },
                 "tabBarStyle": {
                     "justifyContent": "center",
-                    "backgroundColor": "#2b66b3",
+                    "backgroundColor": "#020307",
                     "height": 75,
                     "marginTop": 24,
                     "width": "100%"
