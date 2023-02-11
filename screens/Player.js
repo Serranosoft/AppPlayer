@@ -121,6 +121,7 @@ export default function Player({ navigation, route }) {
         setIsPlaying(true);
         setLoadingWidth(0);
         setTimer(0);
+        setIsMuted(false);
     }
 
     const getSong = async () => {
