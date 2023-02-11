@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Image, ImageBackground, ScrollView, StatusBar, Text, TouchableOpacity, View } from "react-native"
+import { Image, ImageBackground, ScrollView, Text, TouchableOpacity, View } from "react-native"
 import { supabase } from "../src/supabaseClient";
 
 export default function Nanas({ navigation }) {
@@ -49,14 +49,15 @@ export default function Nanas({ navigation }) {
                     flex: 1,
                     paddingTop: 20,
                 }}>
-                    <View style={{ marginVertical: 20 }}>
+                    <View style={{ marginVertical: 20, flex: 1 }}>
                         <Text style={{ marginLeft: 12, marginBottom: 20, fontSize: 30, color: "#95E3EB", fontFamily: "heading" }}>Nanas</Text>
 
                         <View style={{
                             flexDirection: "row",
                             flexWrap: "wrap",
                         }}>
-                            {
+                            {nanas.length > 0 ?
+                            
                                 nanas.map((icon, i)=> {
                                     return (
                                         <View key={i} style={{width: "30%", marginHorizontal: 6, marginBottom: 12}}>
@@ -68,6 +69,10 @@ export default function Nanas({ navigation }) {
                                         </View>
                                     )
                                 })
+                                :
+                                <View style={{justifyContent: "center", alignItems: "center"}}>
+                                    <Text style={{fontSize: 45, textAlign: "center", color: "#95E3EB"}}>Cargando...</Text>
+                                </View>   
                             }
                         </View>
 

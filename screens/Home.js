@@ -30,7 +30,7 @@ export default function Home() {
                     "justifyContent": "center",
                     "backgroundColor": "#2b66b3",
                     "height": 75,
-                    // "marginTop": 24,
+                    "marginTop": 24,
                     "width": "100%"
                 }
             }}>
